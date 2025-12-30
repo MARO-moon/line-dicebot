@@ -7,8 +7,8 @@ import re
 
 app = Flask(__name__)
 
-LINE_CHANNEL_ACCESS_TOKEN = "あなたのアクセストークン"
-LINE_CHANNEL_SECRET = "あなたのシークレット"
+LINE_CHANNEL_ACCESS_TOKEN = "YPCr7MhEn4lkeCTxzLIgMXoxxhXXkbWhw1QCZxpgetK/eJ+gU0GZjeY7cm3n2+fBSNt4UgxsqPeSdQxzmZ2lmHDSOc/IxUuaM7qVd540UHlmxRKtUopqRb7fJ9JExEFvAeNOBCt/DmGkJC+UEMEz1AdB04t89/1O/w1cDnyilFU="
+LINE_CHANNEL_SECRET = "ba155109a9953d89484e46461c8c2df3"
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
