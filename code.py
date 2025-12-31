@@ -43,17 +43,72 @@ def handle_message(event):
     text = event.message.text
     result = roll_dice(text)
 
-    if result:
-        reply = result
-    else:
-        reply = "例: 2d6 のように入力してね"
+    if not result:
+        return
 
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=reply)
     )
+def make_status():
+    status = {
+        "STR": 0, "SIZ": 0, "CON": 0, "DEX": 0,
+        "APP": 0, "POW": 0, "INT": 0, "EDU": 0,
+        "IDEA": 0, "LUCK": 0, "MOV": 0
+    }
+
+    # STR
+    for _ in range(3):
+        status["STR"] += random.randint(1, 6)
+    status["STR"] *= 5
+
+    # SIZ
+    for _ in range(2):
+        status["SIZ"] += random.randint(1, 6)
+    status["SIZ"] = (status["SIZ"] + 6) * 5
+
+    # CON
+    for _ in range(3):
+        status["CON"] += random.randint(1, 6)
+    status["CON"] *= 5
+
+    # DEX
+    for _ in range(3):
+        status["DEX"] += random.randint(1, 6)
+    status["DEX"] *= 5
+
+    # APP
+    for _ in range(3):
+        status["APP"] += random.randint(1, 6)
+    status["APP"] *= 5
+
+    # POW
+    for _ in range(3):
+        status["POW"] += random.randint(1, 6)
+    status["POW"] *= 5
+
+    # INT
+    for _ in range(2):
+        status["INT"] += random.randint(1, 6)
+    status["INT"] = (status["INT"] + 6) * 5
+
+    # IDEA
+    status["IDEA"] = status["INT"]
+
+    # EDU
+    for _ in range(2):
+        status["EDU"] += random.randint(1, 6)
+    status["EDU"] = (status["EDU"] + 6) * 5
+
+    # LUCK
+    for _ in range(3):
+        status["LUCK"] += random.randint(1, 6)
+    status["LUCK"] *= 5
+
+    return status
 
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
