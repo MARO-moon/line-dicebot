@@ -42,7 +42,9 @@ def callback():
 def handle_message(event):
     text = event.message.text
     result = roll_dice(text)
-
+    # make コマンド
+    if text == "make": status = make_status() reply = "\n".join([f"{k}: {v}" for k, v in status.items()])
+    
     if not result:
         return
 
@@ -111,4 +113,5 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
