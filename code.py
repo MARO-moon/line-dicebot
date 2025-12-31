@@ -41,19 +41,27 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     text = event.message.text
-    result = roll_dice(text)
+
     # make コマンド
-    if text == "make": 
-        status = make_status() 
+    if text == "make":
+        status = make_status()
         reply = "\n".join([f"{k}: {v}" for k, v in status.items()])
-    
-    if not result:
+
+    # ダイス
+    elif roll_dice(text):
+        reply = roll_dice(text)
+
+    # それ以外は無返信
+    else:
         return
 
+    # LINE に返す
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=reply)
     )
+
+
 def make_status():
     status = {
         "STR": 0, "SIZ": 0, "CON": 0, "DEX": 0,
@@ -115,6 +123,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
