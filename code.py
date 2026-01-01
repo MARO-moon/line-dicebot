@@ -70,7 +70,11 @@ def handle_message(event):
     # 技能ロール（例：目星.75）
     elif skill_check(text):
         reply = skill_check(text)
-
+    
+    # 対抗ロール（例：対抗60→40）
+    elif tai_kou(text):
+        reply = tai_kou(text)
+    
     # ダイスロール（例：3d6, 1d100<=50）
     elif roll_dice(text):
         reply = roll_dice(text)
@@ -152,11 +156,11 @@ def skill_check(text):
     roll = random.randint(1, 100)
 
     # クリティカル
-    if roll == 1:
+    if roll <= 5:
         return f"{name} {roll} → クリティカル"
 
     # ファンブル
-    if (skill <= 50 and roll >= 96) or (skill >= 51 and roll == 100):
+    if roll >= 96:
         return f"{name} {roll} → ファンブル"
 
     # 成功段階
@@ -168,11 +172,44 @@ def skill_check(text):
         return f"{name} {roll} → 成功"
     else:
         return f"{name} {roll} → 失敗"
+        
+def tai_kou(text):
+    match = re.match(r"対抗(\d+)→(\d+)", text)
+    if not match:
+        return None
+
+    me = int(match.group(1))
+    you = int(match.group(2))
+
+    atai = 50 + (me - you)
+
+    # 結果メッセージをまとめる
+    msg = f"対抗 {me} → {you}\n成功率：{atai}%\n"
+
+    if atai <= 0:
+        msg += "結果：強制失敗"
+        return msg
+
+    elif atai >= 100:
+        msg += "結果：確定成功"
+        return msg
+
+    else:
+        deme = random.randint(1, 100)
+        msg += f"出目：{deme}\n"
+
+        if atai < deme:
+            msg += "結果：失敗"
+        else:
+            msg += "結果：成功"
+
+        return msg
 
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
