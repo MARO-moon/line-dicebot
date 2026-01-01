@@ -74,7 +74,15 @@ def handle_message(event):
     # 対抗ロール（例：対抗60→40）
     elif tai_kou(text):
         reply = tai_kou(text)
-    
+        
+    # 一時的狂気
+    elif ichiji_kyouki(text):
+        reply = ichiji_kyouki(text)
+        
+    # 不定の狂気
+    elif futei_kyouki(text):
+        reply = futei_kyouki(text)     
+        
     # ダイスロール（例：3d6, 1d100<=50）
     elif roll_dice(text):
         reply = roll_dice(text)
@@ -205,10 +213,45 @@ def tai_kou(text):
 
         return msg
 
+def ichiji_kyouki(text):
+    if not re.match(r"一時的狂気", text):
+        return None
+
+    hyou = [
+        "気絶or金切り声","オウム返しor多弁症","健忘症",
+        "殺人癖or自殺癖","幻覚or妄想or難聴","過信","逃亡癖or自己愛",
+        "不信","偏執病or偏食症","体調不良"
+    ]
+
+    deme = random.randint(1, 10)
+    time = random.randint(1, 6) * 10 + 30
+    turn = random.randint(1, 10) + 4
+
+    msg = f"一時的狂気\n持続：{time}分 or {turn}ラウンド\n症状：{hyou[deme-1]}"
+    return msg
+
+
+def futei_kyouki(text):
+    if not re.match(r"不定の狂気", text):
+        return None
+
+    hyou2 = [
+        "失語症","奇妙な性的趣向","○○恐怖症",
+        "幼児退行","依存","心因性難聴","手or脚の機能障害",
+        "強迫観念に迫られる","人格改変","記憶改変"
+    ]
+
+    deme = random.randint(1, 10)
+    day = random.randint(1, 10) + 3
+
+    msg = f"不定の狂気\n持続：{day}日\n症状：{hyou2[deme-1]}"
+    return msg
+
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
