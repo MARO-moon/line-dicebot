@@ -58,6 +58,7 @@ def callback():
     return "OK"
 
 @handler.add(MessageEvent, message=TextMessage)
+#ここ大事！！！
 def handle_message(event):
     text = event.message.text
 
@@ -65,6 +66,32 @@ def handle_message(event):
     if text == "make":
         status = make_status()
         reply = "\n".join([f"{k}: {v}" for k, v in status.items()])
+    @handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    text = event.message.text
+
+    # make コマンド
+    if text == "make":
+        status = make_status()
+        reply = "\n".join([f"{k}: {v}" for k, v in status.items()])
+
+    # 技能ロール（例：目星.75）
+    elif skill_check(text):
+        reply = skill_check(text)
+
+    # ダイスロール（例：3d6, 1d100<=50）
+    elif roll_dice(text):
+        reply = roll_dice(text)
+
+    # それ以外は無視
+    else:
+        return
+
+    # LINE に返す
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=reply)
+    )
 
     # ダイス
     elif roll_dice(text):
@@ -169,6 +196,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
