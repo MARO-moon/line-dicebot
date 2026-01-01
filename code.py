@@ -137,11 +137,39 @@ def make_status():
     status["LUCK"] *= 5
 
     return status
+#技能ロール
+def skill_check(text):
+    match = re.match(r"(.+)\.(\d+)", text)
+    if not match:
+        return None
+
+    name = match.group(1)
+    skill = int(match.group(2))
+    roll = random.randint(1, 100)
+
+    # クリティカル
+    if roll == 1:
+        return f"{name} {roll} → クリティカル"
+
+    # ファンブル
+    if (skill <= 50 and roll >= 96) or (skill >= 51 and roll == 100):
+        return f"{name} {roll} → ファンブル"
+
+    # 成功段階
+    if roll <= skill / 5:
+        return f"{name} {roll} → イクストリーム成功"
+    elif roll <= skill / 2:
+        return f"{name} {roll} → ハード成功"
+    elif roll <= skill:
+        return f"{name} {roll} → 成功"
+    else:
+        return f"{name} {roll} → 失敗"
 
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
