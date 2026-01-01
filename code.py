@@ -68,7 +68,7 @@ def handle_message(event):
         reply = "\n".join([f"{k}: {v}" for k, v in status.items()])
         
     elif text == "コマンド":
-    reply = command_list()
+        reply = command_list()
 
     # 技能ロール（例：目星.75）
     elif skill_check(text):
@@ -275,6 +275,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
