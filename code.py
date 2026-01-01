@@ -13,18 +13,37 @@ LINE_CHANNEL_SECRET = "ba155109a9953d89484e46461c8c2df3"
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
+import re
+import random
+
 def roll_dice(text):
-    match = re.match(r"(\d+)d(\d+)", text)
-    if not match:
-        return None
+    # 成功判定 1d100<=50 のような形式
+    match_check = re.match(r"1d(\d+)<=(\d+)", text)
+    if match_check:
+        men = int(match_check.group(1))
+        atai = int(match_check.group(2))
 
-    count = int(match.group(1))
-    sides = int(match.group(2))
+        deme = random.randint(1, men)
+        if deme <= atai:
+            return f"{deme} → 成功"
+        else:
+            return f"{deme} → 失敗"
 
-    rolls = [random.randint(1, sides) for _ in range(count)]
-    total = sum(rolls)
+    # 通常のダイス XdY
+    match_normal = re.match(r"(\d+)d(\d+)", text)
+    if match_normal:
+        kosu = int(match_normal.group(1))
+        men = int(match_normal.group(2))
 
-    return f"{text} → {rolls} = {total}"
+        results = []
+        for _ in range(kosu):
+            results.append(random.randint(1, men))
+
+        total = sum(results)
+        return f"{text} → {results} = {total}"
+
+    # どれにも当てはまらない → 無視
+    return None
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -123,6 +142,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
