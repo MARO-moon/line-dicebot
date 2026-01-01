@@ -66,14 +66,6 @@ def handle_message(event):
     if text == "make":
         status = make_status()
         reply = "\n".join([f"{k}: {v}" for k, v in status.items()])
-    @handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    text = event.message.text
-
-    # make コマンド
-    if text == "make":
-        status = make_status()
-        reply = "\n".join([f"{k}: {v}" for k, v in status.items()])
 
     # 技能ロール（例：目星.75）
     elif skill_check(text):
@@ -92,21 +84,6 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=reply)
     )
-
-    # ダイス
-    elif roll_dice(text):
-        reply = roll_dice(text)
-
-    # それ以外は無返信
-    else:
-        return
-
-    # LINE に返す
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=reply)
-    )
-
 
 def make_status():
     status = {
@@ -196,6 +173,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
