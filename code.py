@@ -156,6 +156,17 @@ def make_status():
     status["LUCK"] *= 5
 
     return status
+    # --- MOV 計算 --- 
+    if status["DEX"] < status["SIZ"] and status["STR"] < status["SIZ"]:
+        status["MOV"] = 7 
+    elif status["DEX"] < status["SIZ"] or status["STR"] < status["SIZ"]:
+        status["MOV"] = 8 
+    elif status["DEX"] > status["SIZ"] and status["STR"] > status["SIZ"]:
+        status["MOV"] = 9 
+    else: status["MOV"] = 8
+    # 念のための保険（通常ここには来ない）
+    return status
+    
 #技能ロール
 def skill_check(text):
     match = re.match(r"(.+)\.(\d+)", text)
@@ -275,6 +286,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
