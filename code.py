@@ -154,8 +154,7 @@ def make_status():
     for _ in range(3):
         status["LUCK"] += random.randint(1, 6)
     status["LUCK"] *= 5
-
-    return status
+    
     # --- MOV 計算 --- 
     if status["DEX"] < status["SIZ"] and status["STR"] < status["SIZ"]:
         status["MOV"] = 7 
@@ -286,6 +285,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
